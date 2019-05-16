@@ -15,11 +15,11 @@ def lines(circles):
 	prov = True
 	prov1 = False
 	delete_line = []
-	ind = 0	
+	ind = 0
 	for i in range(len(circles)):
 		for j in range(len(circles)):
 			if random.randint(0,5)==1 and i!=j:
-				line.append(Lines((circles[i].x,circles[j].x),(circles[i].y,circles[j].y),(200,200,200),[i+1,j+1]))	
+				line.append(Lines((circles[i].x,circles[j].x),(circles[i].y,circles[j].y),(200,200,200),[i+1,j+1]))
 	for lin1 in range(len(line)-1):
 		for lin2 in range(lin1,len(line)):
 			if line[lin1].v[0]==line[lin2].v[1] and line[lin1].v[1]==line[lin2].v[0]:
@@ -41,21 +41,22 @@ def lines(circles):
 			line = []
 			break
 	return line
+	
 def practices(circles):
 	pygame.init()
 	root = pygame.display.set_mode((800,600))
 	pygame.display.set_caption('Алгоритм нахождения остовного дерева неорентированного графа')
-	
+
 	run = True
-	
+
 	line = []
-	
+
 	back = pygame.font.Font(None, 25).render('<- Назад |', True, (255,255,255))
 	refresh = pygame.font.Font(None,25).render('Новый граф',True,(255,255,255))
 	headline = pygame.font.Font(None, 40).render('Алгоритм нахождения остовного дерева', True, (255, 255, 255))
-	
+
 	v = 0
-			
+
 	while run:
 		root.blit(pygame.image.load('sprites/main_background.png'),(0,0))
 		for event in pygame.event.get():
@@ -65,16 +66,16 @@ def practices(circles):
 		posM = pygame.mouse.get_pos()
 		presM = pygame.mouse.get_pressed()
 		#create way in graph
-		if len(line)==0:	
+		if len(line)==0:
 			line = lines(circles)
-		
+
 		if posM[0]>=10 and posM[0]<=83 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1:
 			return False
 			break
 		if posM[0]>=100 and posM[0]<=170 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1:
 			line = []
-		
-		
+
+
 		if presM[0] == 1:
 			if not(pressed_mouse):
 				for lin in range(len(line)):
@@ -93,9 +94,7 @@ def practices(circles):
 		for cir in circles:
 			cir.draw(root)
 		root.blit(back,(10,110))
-		root.blit(refresh,(100,110))		
+		root.blit(refresh,(100,110))
 		root.blit(headline,(150,50))
-		
-		pygame.display.update()			
-				
-				
+
+		pygame.display.update()

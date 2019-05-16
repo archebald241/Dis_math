@@ -8,11 +8,12 @@ class Vertex():
 	def draw(self):
 		pygame.draw.circle(win,(120,120,120),(self.X,self.Y),30)
 		pygame.draw.circle(win,(0,0,0),(self.X,self.Y),30,2)
+		
 def window():
 	pygame.draw.rect(win,(230,203,158),(0,0,800,600))
+	pygame.draw.line(win,(0,0,0),(0,100),(800,100),2)
 	for vert in vertex:
 		vert.draw()
-
 	pygame.display.update()
 
 pygame.init()
