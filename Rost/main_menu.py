@@ -10,10 +10,9 @@ class Vertex():
 		pygame.draw.circle(win,(0,0,0),(self.X,self.Y),30,2)
 def window():
 	pygame.draw.rect(win,(230,203,158),(0,0,800,600))
-	
 	for vert in vertex:
 		vert.draw()
-	
+
 	pygame.display.update()
 
 pygame.init()
