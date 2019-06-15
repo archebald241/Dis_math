@@ -1,5 +1,3 @@
-import os
-os.chdir(os.path.join('Моя папка','Dis_math','Oleg'))
 import pygame
 import random
 import theory
@@ -10,10 +8,11 @@ class Circle():
     def __init__(self,x,y,v):
         self.x = x
         self.y = y
-        self.v = 'V'+str(v)
+        self.v = v
+        self.color = (120,120,120)
     def draw(self,root):
-        pygame.draw.circle(root,(120,120,120),(self.x,self.y),20)
-        root.blit(pygame.font.Font(None, 22).render(self.v, True, (0, 0, 0)),(self.x-7,self.y-7))
+        pygame.draw.circle(root,self.color,(self.x,self.y),20)
+        root.blit(pygame.font.Font(None, 22).render('V'+str(self.v), True, (0, 0, 0)),(self.x-7,self.y-7))
 
 
 #Функция отрисовки объектов в окне

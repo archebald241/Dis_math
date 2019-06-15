@@ -10,6 +10,8 @@ class Lines():
 		self.v = v
 	def draw(self,root):
 		pygame.draw.line(root,self.color,(self.x[0],self.y[0]),(self.x[1],self.y[1]),5)
+def sort_line(v):
+	return v.v
 def lines(circles):
 	line = []
 	prov = True
@@ -19,7 +21,7 @@ def lines(circles):
 	for i in range(len(circles)):
 		for j in range(len(circles)):
 			if random.randint(0,5)==1 and i!=j:
-				line.append(Lines((circles[i].x,circles[j].x),(circles[i].y,circles[j].y),(200,200,200),[i+1,j+1]))
+				line.append(Lines((circles[i].x,circles[j].x),(circles[i].y,circles[j].y),(200,200,200),[circles[i].v,circles[j].v]))
 	for lin1 in range(len(line)-1):
 		for lin2 in range(lin1,len(line)):
 			if line[lin1].v[0]==line[lin2].v[1] and line[lin1].v[1]==line[lin2].v[0]:
@@ -40,6 +42,15 @@ def lines(circles):
 		if c == len(line):
 			line = []
 			break
+	for lin in line:
+		if lin.v[0]>lin.v[1]:
+			li = lin.v[0]
+			lin.v[0] = lin.v[1]
+			lin.v[1] = li
+	line.sort(key=sort_line)
+	for lin in line:
+		print(lin.v)
+	print(' ')
 	return line
 	
 def practices(circles):
@@ -52,10 +63,13 @@ def practices(circles):
 	line = []
 
 	back = pygame.font.Font(None, 25).render('<- Назад |', True, (255,255,255))
-	refresh = pygame.font.Font(None,25).render('Новый граф',True,(255,255,255))
+	refresh = pygame.font.Font(None,25).render('Новый граф | Начать практику',True,(255,255,255))
 	headline = pygame.font.Font(None, 40).render('Алгоритм нахождения остовного дерева', True, (255, 255, 255))
-
 	v = 0
+	use_v = []
+	unuse_line = []
+	start_practice = False
+	pressed_mouse = False
 
 	while run:
 		root.blit(pygame.image.load('sprites/main_background.png'),(0,0))
@@ -69,32 +83,36 @@ def practices(circles):
 		if len(line)==0:
 			line = lines(circles)
 
-		if posM[0]>=10 and posM[0]<=83 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1:
+		if posM[0]>=10 and posM[0]<=90 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1:
 			return False
 			break
-		if posM[0]>=100 and posM[0]<=170 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1:
+		if posM[0]>=100 and posM[0]<=210 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1 and not(start_practice):
 			line = []
 
-
-		if presM[0] == 1:
-			if not(pressed_mouse):
-				for lin in range(len(line)):
-					yr = (posM[0]-line[lin].x[0])*(line[lin].y[1]-line[lin].y[0])-(line[lin].x[1]-line[lin].x[0])*(posM[1]-line[lin].y[0])
-					if yr>-500 and yr<500 and line[lin].color==(200,200,200) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
-						line[lin].color=(255,100,100)
-						break
-					elif yr>-500 and yr<500 and line[lin].color==(255,100,100) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
-						line[lin].color=(200,200,200)
-						break
-			pressed_mouse = True
-		else:
-			pressed_mouse = False
+		if posM[0]>=220 and posM[0]<=370 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1 and not(start_practice):
+			start_practice = True
+		if start_practice:
+			if presM[0] == 1:
+				if not(pressed_mouse):
+					for lin in range(len(line)):
+						yr = (posM[0]-line[lin].x[0])*(line[lin].y[1]-line[lin].y[0])-(line[lin].x[1]-line[lin].x[0])*(posM[1]-line[lin].y[0])
+						if yr>-500 and yr<500 and line[lin].color==(200,200,200) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
+							line[lin].color=(255,100,100)
+							break
+						elif yr>-500 and yr<500 and line[lin].color==(255,100,100) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
+							line[lin].color=(200,200,200)
+							break
+						 
+				pressed_mouse = True
+			else:
+				pressed_mouse = False
 		for lin in line:
 			lin.draw(root)
 		for cir in circles:
 			cir.draw(root)
 		root.blit(back,(10,110))
-		root.blit(refresh,(100,110))
+		if not(start_practice):
+			root.blit(refresh,(100,110))
 		root.blit(headline,(150,50))
 
 		pygame.display.update()
