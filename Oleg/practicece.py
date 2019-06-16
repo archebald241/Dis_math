@@ -10,8 +10,8 @@ class Lines():
 		self.v = v
 	def draw(self,root):
 		pygame.draw.line(root,self.color,(self.x[0],self.y[0]),(self.x[1],self.y[1]),5)
-def sort_line(v):
-	return v.v
+def sort_line(line):
+	return line.v
 def lines(circles):
 	line = []
 	prov = True
@@ -42,11 +42,10 @@ def lines(circles):
 		if c == len(line):
 			line = []
 			break
+	if len(line)<7:
+		line = []
 	for lin in line:
-		if lin.v[0]>lin.v[1]:
-			li = lin.v[0]
-			lin.v[0] = lin.v[1]
-			lin.v[1] = li
+		lin.v.sort()
 	line.sort(key=sort_line)
 	for lin in line:
 		print(lin.v)
@@ -65,11 +64,20 @@ def practices(circles):
 	back = pygame.font.Font(None, 25).render('<- Назад |', True, (255,255,255))
 	refresh = pygame.font.Font(None,25).render('Новый граф | Начать практику',True,(255,255,255))
 	headline = pygame.font.Font(None, 40).render('Алгоритм нахождения остовного дерева', True, (255, 255, 255))
+	graph = pygame.font.Font(None,30).render('Основной граф',True,(255,255,255))
+	ost_tr_graph = pygame.font.Font(None,30).render('Остовное дерево',True,(255,255,255))
+	
 	v = 0
 	use_v = []
 	unuse_line = []
 	start_practice = False
 	pressed_mouse = False
+	
+	ostovn_tree = []
+	
+	vert_ost_tr = []
+	
+	all_vert = False
 
 	while run:
 		root.blit(pygame.image.load('sprites/main_background.png'),(0,0))
@@ -91,28 +99,58 @@ def practices(circles):
 
 		if posM[0]>=220 and posM[0]<=370 and posM[1]>=110 and posM[1] <= 130 and presM[0]==1 and not(start_practice):
 			start_practice = True
+			
 		if start_practice:
 			if presM[0] == 1:
 				if not(pressed_mouse):
 					for lin in range(len(line)):
-						yr = (posM[0]-line[lin].x[0])*(line[lin].y[1]-line[lin].y[0])-(line[lin].x[1]-line[lin].x[0])*(posM[1]-line[lin].y[0])
-						if yr>-500 and yr<500 and line[lin].color==(200,200,200) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
+						sl1 = (posM[0]-line[lin].x[0])*(line[lin].y[1]-line[lin].y[0])
+						sl2 = (line[lin].x[1]-line[lin].x[0])*(posM[1]-line[lin].y[0])
+						yr = sl1 - sl2
+						if (yr>-500 and yr<500 and 
+							line[lin].color==(200,200,200) and posM[0]>60 and 
+							posM[0]<340 and posM[1]>180 and posM[1]<520 and 
+							len(ostovn_tree)<7):
 							line[lin].color=(255,100,100)
-							break
-						elif yr>-500 and yr<500 and line[lin].color==(255,100,100) and posM[0]>60 and posM[0]<340 and posM[1]>180 and posM[1]<520:
-							line[lin].color=(200,200,200)
+							ostovn_tree.append(
+								Lines([line[lin].x[0]+400,line[lin].x[1]+400],[line[lin].y[0],line[lin].y[1]],(255,100,100),line[lin].v))
+							for vert in vert_ost_tr:
+								if vert == line[lin].v[0]:
+									all_vert = True
+									break
+							if not(all_vert):
+								vert_ost_tr.append(line[lin].v[0])
+							all_vert = False
+							for vert in vert_ost_tr:
+								if vert == line[lin].v[1]:
+									all_vert = True
+									break
+							if not(all_vert):
+								vert_ost_tr.append(line[lin].v[1])
+							all_vert = False
 							break
 						 
 				pressed_mouse = True
 			else:
 				pressed_mouse = False
+			if len(ostovn_tree)==7 and len(vert_ost_tr)==8:
+				end_text = pygame.font.Font(None,30).render('Остовное дерево найдено верно',True,(255,255,255))
+			elif len(ostovn_tree)==7 and len(vert_ost_tr)!=8:
+				end_text = pygame.font.Font(None,30).render('Остовное дерево найдено неверно',True,(255,255,255))
+			
 		for lin in line:
 			lin.draw(root)
+		for ost_tr in ostovn_tree:
+			ost_tr.draw(root)
 		for cir in circles:
 			cir.draw(root)
 		root.blit(back,(10,110))
 		if not(start_practice):
 			root.blit(refresh,(100,110))
+		if len(ostovn_tree)==7:
+			root.blit(end_text,(430,550))
+		root.blit(graph,(120,140))
+		root.blit(ost_tr_graph,(520,140))
 		root.blit(headline,(150,50))
 
 		pygame.display.update()
