@@ -1,40 +1,32 @@
 import pygame
-import random
+
 
 class Matr():
 	def __init__(self,text,col,row):
-		self.text = text
-		self.col = col
-		self.row = row
+		self.text = text		#Текст вводимый пользователем
+		self.col = col			#Столбцы V1-V8
+		self.row = row			#Строки V1-V8
 	def blit(self):
-		win.blit(pygame.font.Font(None, 33).render(self.text, True, (0, 0, 0)),((self.col+1)*50+10,(self.row+2)*50+10))
-
+		win.blit(pygame.font.Font(None, 33).render(self.text, True, (0, 0, 0)),((self.col+1)*50+10,(self.row+2)*50+10)) #Отрисовка текста в ячейках
+def sort_m(matr):
+	return matr.row
 def window():
-	pygame.draw.rect(win,(230,203,158),(0,0,900,650))
+	pygame.draw.rect(win,(230,203,158),(0,0,900,650)) #Фон
 	pygame.draw.line(win,(0,0,0),(0,50),(900,50),2)
 	pygame.draw.line(win,(0,0,0),(550,50),(550,650),2)
 
-	pygame.draw.line(win,(0,0,0),(50,100),(50,550),2)
-	pygame.draw.line(win,(0,0,0),(100,100),(100,550),2)
-	pygame.draw.line(win,(0,0,0),(150,100),(150,550),2)
-	pygame.draw.line(win,(0,0,0),(200,100),(200,550),2)
-	pygame.draw.line(win,(0,0,0),(250,100),(250,550),2)
-	pygame.draw.line(win,(0,0,0),(300,100),(300,550),2)
-	pygame.draw.line(win,(0,0,0),(350,100),(350,550),2)
-	pygame.draw.line(win,(0,0,0),(400,100),(400,550),2)
-	pygame.draw.line(win,(0,0,0),(450,100),(450,550),2)
-	pygame.draw.line(win,(0,0,0),(500,100),(500,550),2)
+	win.blit(pygame.font.Font(None,40).render('Нахождение минимального ребра в нагруженном графе',True,(0,0,0)),(70,10))
 
-	pygame.draw.line(win,(0,0,0),(50,100),(500,100),2)
-	pygame.draw.line(win,(0,0,0),(50,150),(500,150),2)
-	pygame.draw.line(win,(0,0,0),(50,200),(500,200),2)
-	pygame.draw.line(win,(0,0,0),(50,250),(500,250),2)
-	pygame.draw.line(win,(0,0,0),(50,300),(500,300),2)
-	pygame.draw.line(win,(0,0,0),(50,350),(500,350),2)
-	pygame.draw.line(win,(0,0,0),(50,400),(500,400),2)
-	pygame.draw.line(win,(0,0,0),(50,450),(500,450),2)
-	pygame.draw.line(win,(0,0,0),(50,500),(500,500),2)
-	pygame.draw.line(win,(0,0,0),(50,550),(500,550),2)
+	win.blit(pygame.font.Font(None,30).render('1,2,..,9 на клавиатуре - ввод значений от 1 до 9',True,(0,0,0)),(50,570))
+	win.blit(pygame.font.Font(None,30).render('В - бесконечность',True,(0,0,0)),(50,595))
+
+	#Линии столбцов
+	for i in range(num_of_vert+2):
+		pygame.draw.line(win,(0,0,0),((i*50)+50,100),((i*50)+50,50+((num_of_vert+2)*50)),2)
+
+	#Линии строк
+	for i in range(num_of_vert+2):
+		pygame.draw.line(win,(0,0,0),(50,(i*50)+100),(50+((num_of_vert+1)*50),(i*50)+100),2)
 
 	if input_matr:
 		if sumbol<3:
@@ -43,59 +35,49 @@ def window():
 	else:
 		strk = 100
 		win.blit(pygame.font.Font(None, 40).render('Минимальные ребра: ', True, (0, 0, 0)),(610,70))
-		for i in range(len(min_matr)):
+		for i in range(len(min_matr)):	#Перебор матрицы минимальных путей
 			win.blit(pygame.font.Font(None, 37).render(
 				str(i+1)+'. V'+str(min_matr[i].row)+'- V'+str(min_matr[i].col)+' ('+min_matr[i].text+')',
 				True, (0, 0, 0)),(620,strk)
-				)
-			strk += 25
+				)	#Отрисовка минимальный путей
+			strk += 25	#Переход к следующей строке
 
-	win.blit(pygame.font.Font(None, 35).render('V1', True, (0, 0, 0)),(115,115))
-	win.blit(pygame.font.Font(None, 35).render('V2', True, (0, 0, 0)),(165,115))
-	win.blit(pygame.font.Font(None, 35).render('V3', True, (0, 0, 0)),(215,115))
-	win.blit(pygame.font.Font(None, 35).render('V4', True, (0, 0, 0)),(265,115))
-	win.blit(pygame.font.Font(None, 35).render('V5', True, (0, 0, 0)),(315,115))
-	win.blit(pygame.font.Font(None, 35).render('V6', True, (0, 0, 0)),(365,115))
-	win.blit(pygame.font.Font(None, 35).render('V7', True, (0, 0, 0)),(415,115))
-	win.blit(pygame.font.Font(None, 35).render('V8', True, (0, 0, 0)),(465,115))
+	
+	for i in range(num_of_vert):
+		win.blit(pygame.font.Font(None, 35).render('V'+str(i+1), True, (0,0,0)),((i*50)+115,115))#Отрисовка тескта вершин
+		win.blit(pygame.font.Font(None, 35).render('V'+str(i+1), True, (0,0,0)),(65,(i*50)+165))
+	
 
-	win.blit(pygame.font.Font(None, 35).render('V1', True, (0, 0, 0)),(65,165))
-	win.blit(pygame.font.Font(None, 35).render('V2', True, (0, 0, 0)),(65,215))
-	win.blit(pygame.font.Font(None, 35).render('V3', True, (0, 0, 0)),(65,265))
-	win.blit(pygame.font.Font(None, 35).render('V4', True, (0, 0, 0)),(65,315))
-	win.blit(pygame.font.Font(None, 35).render('V5', True, (0, 0, 0)),(65,365))
-	win.blit(pygame.font.Font(None, 35).render('V6', True, (0, 0, 0)),(65,415))
-	win.blit(pygame.font.Font(None, 35).render('V7', True, (0, 0, 0)),(65,465))
-	win.blit(pygame.font.Font(None, 35).render('V8', True, (0, 0, 0)),(65,515))
+	win.blit(pygame.font.Font(None, 33).render(text, True, (0, 0, 0)),(x[0],y[0]))	#Отрисовка вводимого текста
 
-	win.blit(pygame.font.Font(None, 33).render(text, True, (0, 0, 0)),(x[0],y[0]))
-
-
-
-	for mat in matr:
+	for mat in matr: #Перебор матрицы путей
 		if mat.col!=col or mat.row!=row:
 			mat.blit()
+
+	if posM[0]>630 and posM[0]<850 and posM[1]>70 and posM[1]<90:
+		pygame.draw.line(win,(0,0,0),(630,95),(840,95),2)	#Подчеркивания текста "Ввести матрицу"
 
 	pygame.display.update()
 
 pygame.init()
 
+num_of_vert = int(input('Введите количество вершин: '))
+
 win = pygame.display.set_mode((900,650))
 
 run = True
 
-coldown = 0
 
 col = 1
 row = 1
 sumbol = 0
 
-key_pressed = False
+key_pressed = False #Отвечает за то, чтобы не повторялось действие при зажатии клавиши
 
 text = ''
 
 matr = []
-input_matr = True
+input_matr = True	#Отвечает за ввод матрицы
 
 result = False
 
@@ -103,39 +85,30 @@ while run:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			run = False
-	Draw_line = False
-	if coldown < 20:
-		Draw_line = True
-	if coldown > 40:
-		coldown = 0
-	coldown+=1
 
+	keys = pygame.key.get_pressed() #Отвечает за нажатую клавишу
 
-	keys = pygame.key.get_pressed()
+	x = [(col+1)*50+10,(col+1)*50+10]	#Отвечает за положение "палочки"
+	y = [(row+2)*50+10,(row+2)*50+40]	#Отвечает за положение "палочки"
 
+	posM = pygame.mouse.get_pos()	#Позиция мыши
+	keyM = pygame.mouse.get_pressed()	#Нажатие клавиши на мыши
 
-	x = [(col+1)*50+10,(col+1)*50+10]
-	y = [(row+2)*50+10,(row+2)*50+40]
-
-	posM = pygame.mouse.get_pos()
-	keyM = pygame.mouse.get_pressed()
-
-	if keyM[0] and posM[0]>630 and posM[0]<850 and posM[1]>70 and posM[1]<90:
+	if keyM[0] and posM[0]>630 and posM[0]<850 and posM[1]>70 and posM[1]<90: #Отвечет за кнопку ввода матрицы
 		input_matr = False
-
 
 	if input_matr:
 		if keys[pygame.K_UP]:
 			if not(key_pressed):
-				if row > 1:
-					matr.append(Matr(text,col,row))
-					sumbol = 0
-					row -= 1
-					text = ''
-					key_pressed = True
+				if row > 1: #Количество строк больше 1
+					matr.append(Matr(text,col,row))	#Добавление в список класса значений
+					sumbol = 0 #Количество символов = 0
+					row -= 1	#От строки отнимается 1
+					text = ''	#Переменная текст становится пустой
+					key_pressed = True #Кнопка нажата становится правдой
 		elif keys[pygame.K_DOWN]:
 			if not(key_pressed):
-				if row < 8:
+				if row < num_of_vert: #Количество строк меньше 8
 					matr.append(Matr(text,col,row))
 					sumbol = 0
 					row += 1
@@ -143,7 +116,7 @@ while run:
 					key_pressed = True
 		elif keys[pygame.K_LEFT]:
 			if not(key_pressed):
-				if col > 1:
+				if col > 1: #Количество столбцов больше 1
 					matr.append(Matr(text,col,row))
 					sumbol = 0
 					col -= 1
@@ -151,24 +124,24 @@ while run:
 					key_pressed = True
 		elif keys[pygame.K_RIGHT]:
 			if not(key_pressed):
-				if col < 8:
+				if col < num_of_vert:	#Количество столбцов меньше 8
 					matr.append(Matr(text,col,row))
 					sumbol = 0
 					col += 1
 					text = ''
 					key_pressed = True
 		elif keys[pygame.K_BACKSPACE]:
-			if not(key_pressed) and sumbol >0:
-				text = text[0:sumbol-1]
-				sumbol -= 1
+			if not(key_pressed) and sumbol>0: #Если кнопка не нажата и количество символов болье 0
+				text = text[0:sumbol-1] #Извеление среза от одного значения до другого
+				sumbol -= 1	#Кол-во символов уменьшается
 				key_pressed = True
 		elif keys[pygame.K_b]:
 			if not(key_pressed) and sumbol<1:
 				text = '&'
-				sumbol += 1
+				sumbol = 3
 				key_pressed = True
 		elif keys[pygame.K_0]:
-			if not(key_pressed) and sumbol <3:
+			if not(key_pressed) and sumbol <3 and sumbol>0:
 				sumbol += 1
 				text += '0'
 				key_pressed = True
@@ -218,23 +191,24 @@ while run:
 				text += '9'
 				key_pressed = True
 		else:
-			for i in range(len(matr)):
-				if matr[i].col==col and matr[i].row==row:
-					text = matr[i].text
-					sumbol = len(matr[i].text)
-					matr.pop(i)
+			for i in range(len(matr)): #Перебор элементов списка матрицы
+				if matr[i].col==col and matr[i].row==row:	#Если матрица столбца равна столбцу и матрица строки равна строке
+					text = matr[i].text #Присваивание текста матрицы в текст
+					sumbol = len(matr[i].text) #Присваивание количества символов
+					matr.pop(i)	#Удаление итого элеметна матрицы
 					break
 			key_pressed = False
 	elif not(result):
 		min = 999
-		min_matr = []
-		for mat in matr:
-			if mat.text != '&' and mat.text !='':
-				if min>int(mat.text):
-					min = int(mat.text)
+		matr.sort(key=sort_m)
+		min_matr = []	#Матрица минимальных путей графа
+		for mat in matr:	#Перебор элементов матрицы
+			if mat.text != '&' and mat.text !='': #Если текст матрицы не пустой и не равен бесконечности
+				if min>int(mat.text):		#Поиск
+					min = int(mat.text)		 # минимального пути в графе
 		for mat in matr:
 			if mat.text != '&' and mat.text!='':
 				if min==int(mat.text):
-					min_matr.append(Matr(mat.text,mat.col,mat.row))
+					min_matr.append(Matr(mat.text,mat.col,mat.row))	#Добавление элементов минимального пути
 		result = True
-	window()
+	window()	#Обращение к фунции отрисовки
