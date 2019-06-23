@@ -101,7 +101,7 @@ def practices(circles):
 			start_practice = True
 			
 		if start_practice:
-			if presM[0] == 1:
+			if presM[0]:
 				if not(pressed_mouse):
 					for lin in range(len(line)):
 						sl1 = (posM[0]-line[lin].x[0])*(line[lin].y[1]-line[lin].y[0])
