@@ -26,6 +26,8 @@ class Way():
 		pygame.draw.line(win,self.color,(self.x[0],self.y[0]),(self.x[1],self.y[1]),2)
 def sort_m(matr): 
 	return matr.row
+def sort_m1(matr): 
+	return matr.col
 	
 def window_graph():
 	pygame.draw.rect(win,(230,203,158),(0,0,900,650)) #Фон
@@ -62,9 +64,10 @@ def window():
 		pygame.draw.line(win,(0,0,0),(50,(i*50)+100),(50+((num_of_vert+1)*50),(i*50)+100),2)
 
 	if input_matr:
+		win.blit(pygame.font.Font(None, 30).render('Введите матрицу длин дуг', True, (0, 0, 0)),(50,70))
 		if sumbol<3 and not(graph_win):
 			pygame.draw.line(win,(0,0,0),(x[0]+sumbol*14,y[0]),(x[1]+sumbol*14,y[1]),2)
-		if len(matr) >= (num_of_vert**2)-1:
+		if len(matr) >= (num_of_vert**2)-2:
 			win.blit(pygame.font.Font(None, 40).render('Ввести матрицу', True, (0, 0, 0)),(630,70))
 	else:
 		strk = 150
@@ -118,6 +121,8 @@ result = False
 
 graph_win = False
 
+prov = True
+
 vert = []
 ways = []
 vert.append(Vert(440,260,1))
@@ -142,11 +147,13 @@ while run:
 	posM = pygame.mouse.get_pos()	#Позиция мыши
 	keyM = pygame.mouse.get_pressed()	#Нажатие клавиши на мыши
 
-	if keyM[0] and posM[0]>630 and posM[0]<850 and posM[1]>70 and posM[1]<90 and len(matr) >= (num_of_vert**2)-1: #Отвечет за кнопку ввода матрицы
+	if keyM[0] and posM[0]>630 and posM[0]<850 and posM[1]>70 and posM[1]<90 and len(matr) >= (num_of_vert**2)-2: #Отвечет за кнопку ввода матрицы
 		input_matr = False
 		if text == '':
 			text = 'b'
 		matr.append(Matr(text,col,row))
+		if col != row:
+			matr.append(Matr(text,row,col))
 	if keyM[0]:
 		if posM[0]>50 and posM[1]>70 and posM[1]<90 and posM[0]<150 and not(mouse_pressed) and result:
 			if not(graph_win): 
@@ -165,26 +172,32 @@ while run:
 					if len(text)==0:
 						text = 'b'
 					matr.append(Matr(text,col,row))	#Добавление в список класса значений
+					if col != row:
+						matr.append(Matr(text,row,col))
 					sumbol = 0 #Количество символов = 0
 					row -= 1	#От строки отнимается 1
 					text = ''	#Переменная текст становится пустой
 					key_pressed = True #Кнопка нажата становится правдой
 		elif keys[pygame.K_DOWN]:
 			if not(key_pressed):
-				if row < num_of_vert: #Количество строк меньше 8
+				if row < num_of_vert and row<col: #Количество строк меньше 8
 					if len(text)==0:
 						text = 'b'
 					matr.append(Matr(text,col,row))
+					if col != row:
+						matr.append(Matr(text,row,col))
 					sumbol = 0
 					row += 1
 					text = ''
 					key_pressed = True
 		elif keys[pygame.K_LEFT]:
 			if not(key_pressed):
-				if col > 1: #Количество столбцов больше 1
+				if col > 1 and row<col: #Количество столбцов больше 1
 					if len(text)==0:
 						text = 'b'
 					matr.append(Matr(text,col,row))
+					if col != row:
+						matr.append(Matr(text,row,col))
 					sumbol = 0
 					col -= 1
 					text = ''
@@ -195,6 +208,8 @@ while run:
 					if len(text)==0:
 						text = 'b'
 					matr.append(Matr(text,col,row))
+					if col != row:
+						matr.append(Matr(text,row,col))
 					sumbol = 0
 					col += 1
 					text = ''
@@ -288,7 +303,7 @@ while run:
 				key_pressed = True
 		else:
 			for i in range(len(matr)): #Перебор элементов списка матрицы
-				if matr[i].col==col and matr[i].row==row:	#Если матрица столбца равна столбцу и матрица строки равна строке
+				if matr[i].col==col and matr[i].row==row or matr[i].col==row and matr[i].row==col :	#Если матрица столбца равна столбцу и матрица строки равна строке
 					text = matr[i].text #Присваивание текста матрицы в текст
 					sumbol = len(matr[i].text) #Присваивание количества символов
 					matr.pop(i)	#Удаление итого элеметна матрицы
@@ -316,6 +331,17 @@ while run:
 			if mat.text != 'b':
 				if min==int(mat.text):
 					min_matr.append(Matr(mat.text,mat.col,mat.row))	#Добавление элементов минимального пути
+		min_matr.sort(key=sort_m)
+		while prov:
+			c = 0
+			for m_m in range(len(min_matr)):
+				if min_matr[m_m].row > min_matr[m_m].col:
+					c+=1
+					min_matr.pop(m_m)
+					break
+			if c == 0:
+				prov = False
+				
 		result = True
 	if not(graph_win):
 		window()	#Обращение к фунции отрисовки
